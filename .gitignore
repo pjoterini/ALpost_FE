@@ -6,9 +6,6 @@
 .pnp.js
 .yarn/cache
 
-package-lock.json 
-# railway doesn't like it
-
 # testing
 /coverage
 
