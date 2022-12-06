@@ -27,6 +27,7 @@ export const Index = () => {
 
   return (
     <Layout>
+      SPORT CATEGORY
       {fetching && !data ? (
         <div>loading...</div>
       ) : (

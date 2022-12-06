@@ -1,5 +1,5 @@
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { Flex, IconButton } from "@chakra-ui/react";
+import { background, Flex, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
 import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
 
@@ -12,7 +12,17 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   return (
     <Flex mr={4} align="center" flexDirection="column">
       <IconButton
-        bgColor={post.voteStatus === 1 ? "green" : undefined}
+        _hover={{
+          borderColor: "white",
+          borderWidth: "1px",
+          background: "secondary",
+          color: "dark2",
+        }}
+        size="sm"
+        color="gray"
+        bgColor="white"
+        borderWidth="2px"
+        borderColor={post.voteStatus === 1 ? "green" : "secondary"}
         aria-label="updoot post"
         onClick={() => {
           if (post.voteStatus === 1) {
@@ -26,9 +36,19 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
       >
         <ChevronUpIcon h={6} w={6} />
       </IconButton>
-      {post.points}
+      <Text py={2}>{post.points}</Text>
       <IconButton
-        bgColor={post.voteStatus === -1 ? "red" : undefined}
+        _hover={{
+          borderColor: "white",
+          borderWidth: "1px",
+          bgColor: "secondary",
+          color: "dark2",
+        }}
+        size="sm"
+        color="gray"
+        bgColor="white"
+        borderWidth="2px"
+        borderColor={post.voteStatus === -1 ? "red" : "secondary"}
         aria-label="downdoot post"
         onClick={() => {
           if (post.voteStatus === -1) {
