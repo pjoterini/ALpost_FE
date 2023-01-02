@@ -15,10 +15,13 @@ export const CategoryLink: React.FC<CategoryLinkProps> = ({
     <NextLink href={url}>
       <Heading
         _hover={{
-          color: "accent",
+          color: "green",
         }}
-        color="dark1"
-        fontWeight="medium"
+        transition="500ms"
+        color="gray"
+        letterSpacing=".1em"
+        fontWeight="normal"
+        textTransform="uppercase"
         size="md"
       >
         {category}

@@ -51,17 +51,24 @@ export const Login: React.FC<loginProps> = ({}) => {
             </Box>
             <Flex justify="space-between" align="center">
               <Button
+                _hover={{
+                  bgColor: "green",
+                  borderColor: "green",
+                  color: "white",
+                }}
                 mt={4}
+                px={6}
                 type="submit"
-                color="aqua"
-                bgColor="teal"
+                color="white"
+                borderColor="green"
+                border="1px solid white"
                 isLoading={isSubmitting}
               >
                 Login
               </Button>
 
               <NextLink href="/forgot-password">
-                <Box>Forgot password?</Box>
+                <Box color="white2">Forgot password?</Box>
               </NextLink>
             </Flex>
           </Form>

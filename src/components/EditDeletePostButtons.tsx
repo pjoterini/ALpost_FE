@@ -12,6 +12,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
   id,
 }) => {
   const [, deletePost] = useDeletePostMutation();
+
   return (
     <Flex alignItems="end">
       <NextLink href="/post/edit/[id]" as={`/post/edit/${id}`}>
@@ -20,7 +21,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
             borderColor: "gray",
             borderWidth: "1px",
           }}
-          color="dark2"
+          color="gray"
           size="sm"
           borderColor="secondary"
           borderWidth="1px"
@@ -37,11 +38,15 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
           borderWidth: "1px",
         }}
         size="sm"
-        color="dark2"
+        color="gray"
         borderColor="secondary"
         borderWidth="1px"
         aria-label="Delete Post"
-        onClick={() => {
+        onClick={(e) => {
+          const result = confirm("Are you sure you want to delete this post?");
+          if (result === false) {
+            return;
+          }
           deletePost({ id });
         }}
       >

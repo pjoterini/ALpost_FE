@@ -6,6 +6,7 @@ import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 import styles from "./NavBar.module.css";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { CategoryLink } from "../CategoryLink";
+import { CreatePostBtn } from "../CreatePostBtn";
 
 interface NavBarProps {}
 
@@ -24,44 +25,30 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     body = null;
   } else if (!data?.me) {
     body = (
-      <>
-        <Box mr={2}>
+      <Flex fontSize="large" fontWeight="medium" color="white">
+        <Box color="green" mr={5}>
           <NextLink href="/login">Login</NextLink>
         </Box>
         <NextLink href="/register">Register</NextLink>
-      </>
+      </Flex>
     );
   } else {
     body = (
       <Flex align="center">
-        <NextLink href="/create-post" legacyBehavior passHref>
-          <Button
-            _hover={{
-              borderWidth: "1px",
-              borderColor: "accent",
-              color: "white",
-            }}
-            transition="border-color 800ms, color 800ms"
-            variant="solid"
-            color="dark1"
-            borderWidth="1px"
-            borderColor="white"
-            bgGradient="linear(to-r, primary, accent)"
-            mr={4}
-          >
-            CREATE POST
-          </Button>
-        </NextLink>
+        <CreatePostBtn />
 
-        <Flex ml={6} alignItems="center">
-          <SettingsIcon color="dark2"></SettingsIcon>
-          <Box ml={2} mr={4}>
-            <Text fontSize="xl" color="accent">
-              {data.me.username}
-            </Text>
-          </Box>
+        <Flex alignItems="center">
+          <NextLink href="/userAccount" legacyBehavior passHref>
+            <Button>
+              <SettingsIcon color="gray" />
+              <Text ml={2} mr={4} fontSize="xl" color="green">
+                {data.me.username}
+              </Text>
+            </Button>
+          </NextLink>
+
           <Button
-            color="dark1"
+            color="red"
             onClick={async () => {
               await logout({});
               router.reload();

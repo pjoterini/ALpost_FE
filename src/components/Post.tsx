@@ -31,7 +31,7 @@ const PostComponent = ({ p, meData }: PostComponentProps) => {
       p={5}
       shadow="md"
       borderColor="secondary"
-      borderWidth="1px"
+      borderWidth="2px"
       borderRadius="5px"
     >
       <Flex>
@@ -39,18 +39,18 @@ const PostComponent = ({ p, meData }: PostComponentProps) => {
         <Flex px={4} flexDirection="column">
           <Flex alignItems="end">
             <NextLink href="/post/[id]" as={`/post/${p.id}`}>
-              <Heading color="dark1" fontSize="lg" fontWeight="medium">
+              <Heading color="white" fontSize="lg" fontWeight="medium">
                 {p.title}
               </Heading>
             </NextLink>
-            <Text ml={2} fontSize="xs">
+            <Text color="white2" ml={2} fontSize="xs">
               posted by {p.creator.username}
             </Text>
             {meData?.me?.id !== p.creator.id ? null : (
               <EditDeletePostButtons id={p.id} />
             )}
           </Flex>
-          <Text fontFamily="monospace" color="dark2" mt={4}>
+          <Text fontFamily="monospace" color="white1" mt={4}>
             {p.textSnippet}
           </Text>
         </Flex>

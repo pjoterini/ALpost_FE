@@ -9,55 +9,79 @@ interface UpdootSectionProps {
 
 export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   const [, vote] = useVoteMutation();
+  let voteStatusColor;
+
+  if (post.voteStatus === 1) {
+    voteStatusColor = "green";
+  }
+  if (post.voteStatus === -1) {
+    voteStatusColor = "red";
+  }
+  if (post.voteStatus == undefined) {
+    voteStatusColor = "gray";
+  }
+
   return (
     <Flex mr={4} align="center" flexDirection="column">
       <IconButton
         _hover={{
           borderColor: "white",
-          borderWidth: "1px",
-          background: "secondary",
-          color: "dark2",
+          borderWidth: "2px",
+          bgColor: "secondary",
+          color: "gray",
         }}
         size="sm"
         color="gray"
-        bgColor="white"
+        bgColor={post.voteStatus === 1 ? "dark1" : "secondary"}
         borderWidth="2px"
         borderColor={post.voteStatus === 1 ? "green" : "secondary"}
         aria-label="updoot post"
-        onClick={() => {
+        onClick={async () => {
           if (post.voteStatus === 1) {
-            return;
+            await vote({
+              postId: post.id,
+              value: 1,
+            });
+          } else {
+            await vote({
+              postId: post.id,
+              value: 1,
+            });
           }
-          vote({
-            postId: post.id,
-            value: 1,
-          });
         }}
       >
         <ChevronUpIcon h={6} w={6} />
       </IconButton>
-      <Text py={2}>{post.points}</Text>
+
+      <Text color={voteStatusColor} py={2}>
+        {post.points}
+      </Text>
+
       <IconButton
         _hover={{
           borderColor: "white",
-          borderWidth: "1px",
+          borderWidth: "2px",
           bgColor: "secondary",
-          color: "dark2",
+          color: "gray",
         }}
         size="sm"
         color="gray"
-        bgColor="white"
+        bgColor={post.voteStatus === -1 ? "dark1" : "secondary"}
         borderWidth="2px"
         borderColor={post.voteStatus === -1 ? "red" : "secondary"}
         aria-label="downdoot post"
-        onClick={() => {
+        onClick={async () => {
           if (post.voteStatus === -1) {
-            return;
+            await vote({
+              postId: post.id,
+              value: -1,
+            });
+          } else {
+            await vote({
+              postId: post.id,
+              value: -1,
+            });
           }
-          vote({
-            postId: post.id,
-            value: -1,
-          });
         }}
       >
         <ChevronDownIcon h={6} w={6} />
