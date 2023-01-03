@@ -14,7 +14,7 @@ export const CreatePostBtn: React.FC<CreatePostBtnProps> = ({}) => {
           color: "white",
         }}
         transition="1s"
-        color="gray"
+        color="white2"
         borderWidth="1px"
         borderColor="red"
         bgGradient="linear(to-r, primary, secondary)"

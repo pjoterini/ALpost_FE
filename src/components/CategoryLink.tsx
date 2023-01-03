@@ -18,7 +18,7 @@ export const CategoryLink: React.FC<CategoryLinkProps> = ({
           color: "green",
         }}
         transition="500ms"
-        color="gray"
+        color="white2"
         letterSpacing=".1em"
         fontWeight="normal"
         textTransform="uppercase"

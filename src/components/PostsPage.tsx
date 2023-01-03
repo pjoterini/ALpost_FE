@@ -5,10 +5,10 @@ import { Layout } from "./Layout";
 import PostComponent from "./Post";
 
 interface PostsPageProps {
-  category: string;
+  categoryHeading: string;
 }
 
-export const PostsPage: React.FC<PostsPageProps> = ({ category }) => {
+export const PostsPage: React.FC<PostsPageProps> = ({ categoryHeading }) => {
   const [variables, setVariables] = useState({
     limit: 15,
     cursor: null as null | string,
@@ -30,7 +30,7 @@ export const PostsPage: React.FC<PostsPageProps> = ({ category }) => {
   return (
     <Layout>
       <Heading pb={5} color="white2" as="h2" size="md" noOfLines={1}>
-        Category : {category}
+        Category : {categoryHeading}
       </Heading>
       {fetching && !data ? (
         <div>loading...</div>
@@ -51,8 +51,18 @@ export const PostsPage: React.FC<PostsPageProps> = ({ category }) => {
               });
             }}
             isLoading={fetching}
-            m="auto"
-            my={8}
+            _hover={{
+              bgColor: "green",
+              borderColor: "green",
+              color: "white",
+            }}
+            mt={6}
+            px={6}
+            mx="auto"
+            type="submit"
+            color="white"
+            borderColor="green"
+            border="1px solid white"
           >
             Load More
           </Button>

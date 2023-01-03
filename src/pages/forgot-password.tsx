@@ -6,12 +6,16 @@ import { Formik, Form } from "formik";
 import { InputField } from "../components/InputField";
 import { Flex, Button, Box } from "@chakra-ui/react";
 import { useForgotPasswordMutation } from "../generated/graphql";
+import { LogoLink } from "../components/LogoLink/LogoLink";
 
 const ForgotPassword: React.FC<{}> = ({}) => {
   const [complete, setComplete] = useState(false);
   const [, forgotPassword] = useForgotPasswordMutation();
   return (
     <Wrapper variant="small">
+      <Box pb={8}>
+        <LogoLink />
+      </Box>
       <Formik
         initialValues={{ email: "" }}
         onSubmit={async (values) => {
@@ -22,8 +26,8 @@ const ForgotPassword: React.FC<{}> = ({}) => {
       >
         {({ isSubmitting }) =>
           complete ? (
-            <Box>
-              if an account with that email adress exists, we sent You email
+            <Box color="white">
+              if account with that email adress exists, we sent you an email
               there.
             </Box>
           ) : (
@@ -38,10 +42,17 @@ const ForgotPassword: React.FC<{}> = ({}) => {
               </Box>
               <Flex justify="space-between" align="center">
                 <Button
-                  mt={4}
+                  _hover={{
+                    bgColor: "green",
+                    borderColor: "green",
+                    color: "white",
+                  }}
+                  mt={6}
+                  px={6}
                   type="submit"
-                  color="aqua"
-                  bgColor="teal"
+                  color="white"
+                  borderColor="green"
+                  border="1px solid white"
                   isLoading={isSubmitting}
                 >
                   Reset password

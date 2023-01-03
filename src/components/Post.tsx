@@ -1,4 +1,4 @@
-import { Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import React from "react";
 import { EditDeletePostButtons } from "./EditDeletePostButtons";
 import { UpdootSection } from "./UpdootSection";
@@ -11,6 +11,7 @@ interface PostComponentProps {
     createdAt: string;
     updatedAt: string;
     title: string;
+    category: string;
     points: number;
     textSnippet: string;
     voteStatus?: number | null | undefined;
@@ -37,21 +38,38 @@ const PostComponent = ({ p, meData }: PostComponentProps) => {
       <Flex>
         <UpdootSection post={p} />
         <Flex px={4} flexDirection="column">
-          <Flex alignItems="end">
+          <Flex alignItems="center">
             <NextLink href="/post/[id]" as={`/post/${p.id}`}>
-              <Heading color="white" fontSize="lg" fontWeight="medium">
+              <Heading mr={8} color="white" fontSize="lg" fontWeight="medium">
                 {p.title}
               </Heading>
             </NextLink>
-            <Text color="white2" ml={2} fontSize="xs">
-              posted by {p.creator.username}
-            </Text>
             {meData?.me?.id !== p.creator.id ? null : (
               <EditDeletePostButtons id={p.id} />
             )}
+            <Flex
+              flexShrink="0"
+              flexDir="column"
+              color="white2"
+              ml={4}
+              fontSize="xs"
+            >
+              <Text>
+                POSTED BY -
+                <Text ml={2} fontSize="md" display="inline" color="green">
+                  {p.creator.username}
+                </Text>
+              </Text>
+              <Box>
+                CATEGORY -
+                <Text ml={2} fontSize="md" display="inline" color="green">
+                  {p.category}
+                </Text>
+              </Box>
+            </Flex>
           </Flex>
           <Text fontFamily="monospace" color="white1" mt={4}>
-            {p.textSnippet}
+            {p.textSnippet}..
           </Text>
         </Flex>
       </Flex>

@@ -2,7 +2,7 @@ import { withUrqlClient } from "next-urql";
 import React from "react";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { Layout } from "../../components/Layout";
-import { Heading } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import { useGetPostFromUrl } from "../../utils/useGetPostFromUrl";
 import { EditDeletePostButtons } from "../../components/EditDeletePostButtons";
 import { useMeQuery } from "../../generated/graphql";
@@ -29,11 +29,19 @@ const Post = ({}) => {
 
   return (
     <Layout>
-      <Heading mb={4}>{data.post.title}</Heading>
-      {data.post.text}
-      {meData?.me?.id !== data.post.creator.id ? null : (
-        <EditDeletePostButtons id={data.post.id} />
-      )}
+      <Flex flexDir="column">
+        <Heading mt={8} fontSize="2xl" color="white2" mb={4}>
+          {data.post.title}
+        </Heading>
+        <Text color="white" my={5} fontSize="l">
+          {data.post.text}
+        </Text>
+        <Box mx="auto" my={5}>
+          {meData?.me?.id !== data.post.creator.id ? null : (
+            <EditDeletePostButtons id={data.post.id} />
+          )}
+        </Box>
+      </Flex>
     </Layout>
   );
 };

@@ -3,12 +3,14 @@ import { Formik, Form } from "formik";
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { Wrapper } from "../components/Wrapper";
 import { InputField } from "../components/InputField";
+import { LogoLink } from "../components/LogoLink/LogoLink";
 import { useLoginMutation } from "../generated/graphql";
 import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import NextLink from "next/link";
+import { SubmitBtn } from "../components/SubmitBtn";
 
 interface loginProps {}
 
@@ -18,6 +20,9 @@ export const Login: React.FC<loginProps> = ({}) => {
 
   return (
     <Wrapper variant="small">
+      <Box pb={8}>
+        <LogoLink />
+      </Box>
       <Formik
         initialValues={{ usernameOrEmail: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
@@ -49,23 +54,12 @@ export const Login: React.FC<loginProps> = ({}) => {
                 type="password"
               />
             </Box>
-            <Flex justify="space-between" align="center">
-              <Button
-                _hover={{
-                  bgColor: "green",
-                  borderColor: "green",
-                  color: "white",
-                }}
-                mt={4}
-                px={6}
-                type="submit"
-                color="white"
-                borderColor="green"
-                border="1px solid white"
-                isLoading={isSubmitting}
-              >
-                Login
-              </Button>
+            <Flex pt={4} justify="space-between" align="center">
+              <SubmitBtn
+                text="Login"
+                state={isSubmitting}
+                confirmation={false}
+              />
 
               <NextLink href="/forgot-password">
                 <Box color="white2">Forgot password?</Box>

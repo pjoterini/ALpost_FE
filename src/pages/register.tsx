@@ -8,6 +8,8 @@ import { toErrorMap } from "../utils/toErrorMap";
 import { useRouter } from "next/router";
 import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
+import { LogoLink } from "../components/LogoLink/LogoLink";
+import { SubmitBtn } from "../components/SubmitBtn";
 
 interface registerProps {}
 
@@ -17,6 +19,9 @@ export const Register: React.FC<registerProps> = ({}) => {
 
   return (
     <Wrapper variant="small">
+      <Box pb={8}>
+        <LogoLink />
+      </Box>
       <Formik
         initialValues={{ username: "", email: "", password: "" }}
         onSubmit={async (values, { setErrors }) => {
@@ -48,15 +53,11 @@ export const Register: React.FC<registerProps> = ({}) => {
                 type="password"
               />
             </Box>
-            <Button
-              mt={4}
-              type="submit"
-              color="aqua"
-              bgColor="teal"
-              isLoading={isSubmitting}
-            >
-              Register
-            </Button>
+            <SubmitBtn
+              text="Register"
+              state={isSubmitting}
+              confirmation={false}
+            />
           </Form>
         )}
       </Formik>

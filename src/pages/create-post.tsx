@@ -7,6 +7,7 @@ import { withUrqlClient } from "next-urql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 import { Layout } from "../components/Layout";
 import { useIsAuth } from "../utils/useIsAuth";
+import { SubmitBtn } from "../components/SubmitBtn";
 
 const CreatePost: React.FC<{}> = ({}) => {
   const router = useRouter();
@@ -15,7 +16,7 @@ const CreatePost: React.FC<{}> = ({}) => {
   return (
     <Layout variant="small">
       <Formik
-        initialValues={{ title: "", text: "" }}
+        initialValues={{ title: "", category: "", text: "" }}
         onSubmit={async (values) => {
           const { error } = await createPost({ input: values });
           if (error?.message.includes("not authenticated")) {
@@ -30,6 +31,13 @@ const CreatePost: React.FC<{}> = ({}) => {
             <InputField name="title" placeholder="title" label="Title" />
             <Box mt={4}>
               <InputField
+                name="category"
+                placeholder="category"
+                label="Category"
+              />
+            </Box>
+            <Box mt={4}>
+              <InputField
                 textarea
                 name="text"
                 placeholder="text"
@@ -37,15 +45,11 @@ const CreatePost: React.FC<{}> = ({}) => {
               />
             </Box>
             <Flex justify="space-between" align="center">
-              <Button
-                mt={4}
-                type="submit"
-                color="aqua"
-                bgColor="teal"
-                isLoading={isSubmitting}
-              >
-                Create Post
-              </Button>
+              <SubmitBtn
+                text="Create Post"
+                state={isSubmitting}
+                confirmation={false}
+              />
             </Flex>
           </Form>
         )}

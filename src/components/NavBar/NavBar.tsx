@@ -1,12 +1,12 @@
-import { Box, Link, Button, Flex, Heading, Icon, Text } from "@chakra-ui/react";
-import React, { useEffect, useState } from "react";
+import { Box, Button, Flex, Text } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
-import styles from "./NavBar.module.css";
 import { SettingsIcon } from "@chakra-ui/icons";
 import { CategoryLink } from "../CategoryLink";
 import { CreatePostBtn } from "../CreatePostBtn";
+import { LogoLink } from "../LogoLink/LogoLink";
 
 interface NavBarProps {}
 
@@ -38,7 +38,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         <CreatePostBtn />
 
         <Flex alignItems="center">
-          <NextLink href="/userAccount" legacyBehavior passHref>
+          <NextLink href="/user-account" legacyBehavior passHref>
             <Button>
               <SettingsIcon color="gray" />
               <Text ml={2} mr={4} fontSize="xl" color="green">
@@ -69,7 +69,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         zIndex={2}
         position="relative"
         shadow="md"
-        className={styles.background}
+        bgGradient="linear(to-l, secondary, primary)"
         p={4}
       >
         <Flex
@@ -78,12 +78,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
           margin="auto"
           maxWidth="800px"
         >
-          <NextLink href="/">
-            <header>
-              <span className={styles.al}>AL</span>
-              <span className={styles.post}>POST</span>
-            </header>
-          </NextLink>
+          <LogoLink />
           <Box>{body}</Box>
         </Flex>
       </Box>

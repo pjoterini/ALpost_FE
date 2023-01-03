@@ -10,6 +10,7 @@ import {
 } from "../../../generated/graphql";
 import { useGetIntId } from "../../../utils/useGetIntId";
 import { useRouter } from "next/router";
+import { SubmitBtn } from "../../../components/SubmitBtn";
 
 const EditPost: React.FC<{}> = ({}) => {
   const router = useRouter();
@@ -41,7 +42,11 @@ const EditPost: React.FC<{}> = ({}) => {
   return (
     <Layout variant="small">
       <Formik
-        initialValues={{ title: data.post.title, text: data.post.text }}
+        initialValues={{
+          title: data.post.title,
+          category: data.post.category,
+          text: data.post.text,
+        }}
         onSubmit={async (values) => {
           updatePost({ id: intId, ...values });
           router.back();
@@ -52,6 +57,13 @@ const EditPost: React.FC<{}> = ({}) => {
             <InputField name="title" placeholder="title" label="Title" />
             <Box mt={4}>
               <InputField
+                name="category"
+                placeholder="category"
+                label="Category"
+              />
+            </Box>
+            <Box mt={4}>
+              <InputField
                 textarea
                 name="text"
                 placeholder="text"
@@ -59,15 +71,11 @@ const EditPost: React.FC<{}> = ({}) => {
               />
             </Box>
             <Flex justify="space-between" align="center">
-              <Button
-                mt={4}
-                type="submit"
-                color="aqua"
-                bgColor="teal"
-                isLoading={isSubmitting}
-              >
-                Update Post
-              </Button>
+              <SubmitBtn
+                text="Update post"
+                state={isSubmitting}
+                confirmation={true}
+              />
             </Flex>
           </Form>
         )}
