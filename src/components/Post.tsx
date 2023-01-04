@@ -6,7 +6,7 @@ import NextLink from "next/link";
 import { MeQuery, Post } from "../generated/graphql";
 
 interface PostComponentProps {
-  p: {
+  post: {
     id: number;
     createdAt: string;
     updatedAt: string;
@@ -24,56 +24,56 @@ interface PostComponentProps {
   meData: MeQuery | undefined;
 }
 
-const PostComponent = ({ p, meData }: PostComponentProps) => {
+const PostComponent = ({ post, meData }: PostComponentProps) => {
   return (
-    <Flex
+    <Box
+      width="100%"
       bg="primary"
-      key={p.id}
-      p={5}
       shadow="md"
       borderColor="secondary"
       borderWidth="2px"
       borderRadius="5px"
     >
-      <Flex>
-        <UpdootSection post={p} />
-        <Flex px={4} flexDirection="column">
-          <Flex alignItems="center">
-            <NextLink href="/post/[id]" as={`/post/${p.id}`}>
-              <Heading mr={8} color="white" fontSize="lg" fontWeight="medium">
-                {p.title}
+      <Flex w="100%" alignItems="center" justifyContent="space-between">
+        <UpdootSection post={post} />
+
+        <Flex w="100%" justifyContent="space-between">
+          <Flex mt={6} ml={4} flexDir="column">
+            <NextLink href="/post/[id]" as={`/post/${post.id}`}>
+              <Heading color="white" fontSize="lg" fontWeight="medium">
+                {post.title}
               </Heading>
             </NextLink>
-            {meData?.me?.id !== p.creator.id ? null : (
-              <EditDeletePostButtons id={p.id} />
-            )}
-            <Flex
-              flexShrink="0"
-              flexDir="column"
-              color="white2"
-              ml={4}
-              fontSize="xs"
-            >
-              <Text>
-                POSTED BY -
-                <Text ml={2} fontSize="md" display="inline" color="green">
-                  {p.creator.username}
-                </Text>
-              </Text>
-              <Box>
-                CATEGORY -
-                <Text ml={2} fontSize="md" display="inline" color="green">
-                  {p.category}
-                </Text>
-              </Box>
-            </Flex>
+            <Text my={4} fontFamily="monospace" color="white1">
+              {post.textSnippet}..
+            </Text>
           </Flex>
-          <Text fontFamily="monospace" color="white1" mt={4}>
-            {p.textSnippet}..
-          </Text>
+
+          <Flex
+            my={5}
+            mx={5}
+            flexShrink={0}
+            flexDir="column"
+            justifyContent="center"
+            alignItems="center"
+            color="white2"
+            fontSize="xs"
+          >
+            <Box>POSTED BY</Box>
+            <Text pb={2} fontSize="md" color="green">
+              {post.creator.username}
+            </Text>
+            <Box>CATEGORY</Box>
+            <Text pb={2} fontSize="md" color="green">
+              {post.category}
+            </Text>
+            {meData?.me?.id !== post.creator.id ? null : (
+              <EditDeletePostButtons id={post.id} />
+            )}
+          </Flex>
         </Flex>
       </Flex>
-    </Flex>
+    </Box>
   );
 };
 

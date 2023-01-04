@@ -14,7 +14,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
   const [, deletePost] = useDeletePostMutation();
 
   return (
-    <Flex alignItems="end">
+    <Flex mt={2}>
       <NextLink href="/post/edit/[id]" as={`/post/edit/${id}`}>
         <IconButton
           _hover={{
@@ -25,7 +25,6 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
           size="sm"
           borderColor="secondary"
           borderWidth="1px"
-          mx={4}
           aria-label="go to edit post page"
         >
           <EditIcon />
@@ -37,6 +36,7 @@ export const EditDeletePostButtons: React.FC<EditDeletePostButtonsProps> = ({
           borderColor: "gray",
           borderWidth: "1px",
         }}
+        ml={3}
         size="sm"
         color="gray"
         borderColor="secondary"

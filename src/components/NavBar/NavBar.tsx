@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useLogoutMutation, useMeQuery } from "../../generated/graphql";
 import { SettingsIcon } from "@chakra-ui/icons";
-import { CategoryLink } from "../CategoryLink";
+import { CategoryLink } from "./CategoryLink";
 import { CreatePostBtn } from "../CreatePostBtn";
 import { LogoLink } from "../LogoLink/LogoLink";
 

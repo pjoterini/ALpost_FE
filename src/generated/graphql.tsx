@@ -112,6 +112,7 @@ export type Query = {
   me?: Maybe<User>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
+  userPosts: UserPosts;
 };
 
 
@@ -123,6 +124,12 @@ export type QueryPostArgs = {
 export type QueryPostsArgs = {
   cursor?: InputMaybe<Scalars['String']>;
   limit: Scalars['Int'];
+  search: Scalars['String'];
+};
+
+
+export type QueryUserPostsArgs = {
+  userId: Scalars['Int'];
 };
 
 export type User = {
@@ -130,6 +137,7 @@ export type User = {
   createdAt: Scalars['String'];
   email: Scalars['String'];
   id: Scalars['Float'];
+  posts: Array<Post>;
   updatedAt: Scalars['String'];
   username: Scalars['String'];
 };
@@ -144,6 +152,11 @@ export type UsernamePasswordInput = {
   email: Scalars['String'];
   password: Scalars['String'];
   username: Scalars['String'];
+};
+
+export type UserPosts = {
+  __typename?: 'userPosts';
+  posts: Array<Post>;
 };
 
 export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, category: string, points: number, textSnippet: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string } };
@@ -236,10 +249,18 @@ export type PostQuery = { __typename?: 'Query', post?: { __typename?: 'Post', id
 export type PostsQueryVariables = Exact<{
   limit: Scalars['Int'];
   cursor?: InputMaybe<Scalars['String']>;
+  search: Scalars['String'];
 }>;
 
 
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, category: string, points: number, textSnippet: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string } }> } };
+
+export type UserPostsQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type UserPostsQuery = { __typename?: 'Query', userPosts: { __typename?: 'userPosts', posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, category: string, points: number, textSnippet: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string } }> } };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
@@ -438,8 +459,8 @@ export function usePostQuery(options: Omit<Urql.UseQueryArgs<PostQueryVariables>
   return Urql.useQuery<PostQuery, PostQueryVariables>({ query: PostDocument, ...options });
 };
 export const PostsDocument = gql`
-    query Posts($limit: Int!, $cursor: String) {
-  posts(limit: $limit, cursor: $cursor) {
+    query Posts($limit: Int!, $cursor: String, $search: String!) {
+  posts(limit: $limit, cursor: $cursor, search: $search) {
     hasMore
     posts {
       ...PostSnippet
@@ -450,4 +471,17 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'>) {
   return Urql.useQuery<PostsQuery, PostsQueryVariables>({ query: PostsDocument, ...options });
+};
+export const UserPostsDocument = gql`
+    query UserPosts($userId: Int!) {
+  userPosts(userId: $userId) {
+    posts {
+      ...PostSnippet
+    }
+  }
+}
+    ${PostSnippetFragmentDoc}`;
+
+export function useUserPostsQuery(options: Omit<Urql.UseQueryArgs<UserPostsQueryVariables>, 'query'>) {
+  return Urql.useQuery<UserPostsQuery, UserPostsQueryVariables>({ query: UserPostsDocument, ...options });
 };

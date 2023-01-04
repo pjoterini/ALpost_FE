@@ -4,7 +4,22 @@ import React from "react";
 import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
 
 interface UpdootSectionProps {
-  post: PostSnippetFragment;
+  post: {
+    __typename?: "Post" | undefined;
+    id: number;
+    createdAt: string;
+    updatedAt: string;
+    title: string;
+    category: string;
+    points: number;
+    textSnippet?: string;
+    voteStatus?: number | null | undefined;
+    creator: {
+      __typename?: "User";
+      id: number;
+      username: string;
+    };
+  };
 }
 
 export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
@@ -22,7 +37,7 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
   }
 
   return (
-    <Flex mr={4} align="center" flexDirection="column">
+    <Flex p={4} align="center" flexDirection="column">
       <IconButton
         _hover={{
           borderColor: "white",

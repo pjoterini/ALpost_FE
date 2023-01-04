@@ -3,7 +3,7 @@ import { PostsPage } from "../components/PostsPage";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
 export const Index = () => {
-  return <PostsPage categoryHeading="Main" />;
+  return <PostsPage searchFor="all" categoryHeading="Main" />;
 };
 
 export default withUrqlClient(createUrqlClient, { ssr: true })(Index);

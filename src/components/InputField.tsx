@@ -37,6 +37,7 @@ export const InputField: React.FC<InputFieldProps> = ({
           borderColor: "green",
           outline: "none",
         }}
+        height={textarea ? "200px" : "43"}
         color="gray"
         borderColor="secondary"
         borderWidth="2px"

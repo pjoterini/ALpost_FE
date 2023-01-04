@@ -28,12 +28,18 @@ const CreatePost: React.FC<{}> = ({}) => {
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField name="title" placeholder="title" label="Title" />
+            <InputField
+              name="title"
+              placeholder="title"
+              label="Title"
+              maxLength={120}
+            />
             <Box mt={4}>
               <InputField
                 name="category"
                 placeholder="category"
                 label="Category"
+                maxLength={20}
               />
             </Box>
             <Box mt={4}>
@@ -42,6 +48,7 @@ const CreatePost: React.FC<{}> = ({}) => {
                 name="text"
                 placeholder="text"
                 label="Body"
+                maxLength={1000}
               />
             </Box>
             <Flex justify="space-between" align="center">

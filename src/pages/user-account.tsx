@@ -1,8 +1,9 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Stack, Text } from "@chakra-ui/react";
 import { withUrqlClient } from "next-urql";
 import NextLink from "next/link";
 import React, { useEffect, useState } from "react";
 import { LogoLink } from "../components/LogoLink/LogoLink";
+import PostComponent from "../components/Post";
 import { InfoRow } from "../components/UserAccount/InfoRow";
 import { Wrapper } from "../components/Wrapper";
 import { useMeQuery, useUserPostsQuery } from "../generated/graphql";
@@ -14,6 +15,13 @@ const UserAccount: React.FC<userAccountProps> = ({}) => {
   const [isServer, setIsServer] = useState(true);
   useEffect(() => setIsServer(false), []);
   const [{ data, fetching }] = useMeQuery({ pause: isServer });
+
+  const variables = {
+    userId: data?.me?.id as number,
+  };
+
+  const [{ data: userPostsData, fetching: userPostsFetching }] =
+    useUserPostsQuery({ variables });
 
   let body = null;
 
@@ -34,15 +42,22 @@ const UserAccount: React.FC<userAccountProps> = ({}) => {
         mt={10}
         minH="300px"
         minW="250px"
+        borderRadius={5}
+        border="1px solid gray"
+        p={5}
+        bgGradient="linear(to-l, secondary, primary)"
         justifyContent="space-between"
         flexDir="column"
       >
+        <Box color="white">{userPostsData?.userPosts.posts.length}</Box>
+
         <Text
+          width="100%"
           mb={4}
           borderRadius={5}
-          px="8"
-          mx="auto"
-          bg="secondary"
+          border="1px solid gray"
+          textAlign="center"
+          py={1}
           color="white"
           fontSize="large"
         >
