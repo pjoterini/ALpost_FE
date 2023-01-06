@@ -19,7 +19,7 @@ export const SubmitBtn: React.FC<SubmitBtnProps> = ({
         borderColor: "green",
         color: "white",
       }}
-      mt={6}
+      mt={4}
       px={6}
       type="submit"
       color="white"

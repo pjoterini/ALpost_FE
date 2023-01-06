@@ -21,12 +21,18 @@ export type FieldError = {
   message: Scalars['String'];
 };
 
+export type Link = {
+  __typename?: 'Link';
+  link: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   changePassword: UserResponse;
   createPost: Post;
+  createReply: Reply;
   deletePost: Scalars['Boolean'];
-  forgotPassword: Scalars['Boolean'];
+  forgotPassword: Link;
   login: UserResponse;
   logout: Scalars['Boolean'];
   register: UserResponse;
@@ -43,6 +49,11 @@ export type MutationChangePasswordArgs = {
 
 export type MutationCreatePostArgs = {
   input: PostInput;
+};
+
+
+export type MutationCreateReplyArgs = {
+  input: ReplyInput;
 };
 
 
@@ -94,6 +105,7 @@ export type Post = {
   creatorId: Scalars['Float'];
   id: Scalars['Float'];
   points: Scalars['Float'];
+  replies: Array<Reply>;
   text: Scalars['String'];
   textSnippet: Scalars['String'];
   title: Scalars['String'];
@@ -112,7 +124,9 @@ export type Query = {
   me?: Maybe<User>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
+  replies: Replies;
   userPosts: UserPosts;
+  userUpdoots: UserUpdoots;
 };
 
 
@@ -128,8 +142,51 @@ export type QueryPostsArgs = {
 };
 
 
+export type QueryRepliesArgs = {
+  userId: Scalars['Int'];
+};
+
+
 export type QueryUserPostsArgs = {
   userId: Scalars['Int'];
+};
+
+
+export type QueryUserUpdootsArgs = {
+  userId: Scalars['Int'];
+};
+
+export type Replies = {
+  __typename?: 'Replies';
+  replies: Array<Reply>;
+};
+
+export type Reply = {
+  __typename?: 'Reply';
+  createdAt: Scalars['String'];
+  creatorId: Scalars['Float'];
+  id: Scalars['Float'];
+  points: Scalars['Float'];
+  post: Post;
+  postid: Scalars['Int'];
+  text: Scalars['String'];
+  updatedAt: Scalars['String'];
+  updoots: Array<Updoot>;
+  voteStatus?: Maybe<Scalars['Int']>;
+};
+
+export type ReplyInput = {
+  postid: Scalars['Int'];
+  text: Scalars['String'];
+};
+
+export type Updoot = {
+  __typename?: 'Updoot';
+  post: Post;
+  postId: Scalars['Float'];
+  user: User;
+  userId: Scalars['Float'];
+  value: Scalars['Float'];
 };
 
 export type User = {
@@ -139,6 +196,7 @@ export type User = {
   id: Scalars['Float'];
   posts: Array<Post>;
   updatedAt: Scalars['String'];
+  updoots: Array<Updoot>;
   username: Scalars['String'];
 };
 
@@ -157,6 +215,11 @@ export type UsernamePasswordInput = {
 export type UserPosts = {
   __typename?: 'userPosts';
   posts: Array<Post>;
+};
+
+export type UserUpdoots = {
+  __typename?: 'userUpdoots';
+  updoots: Array<Updoot>;
 };
 
 export type PostSnippetFragment = { __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, category: string, points: number, textSnippet: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string } };
@@ -182,6 +245,13 @@ export type CreatePostMutationVariables = Exact<{
 
 export type CreatePostMutation = { __typename?: 'Mutation', createPost: { __typename?: 'Post', id: number, title: string, category: string, text: string, creatorId: number, points: number, createdAt: string, updatedAt: string } };
 
+export type CreateReplyMutationVariables = Exact<{
+  input: ReplyInput;
+}>;
+
+
+export type CreateReplyMutation = { __typename?: 'Mutation', createReply: { __typename?: 'Reply', id: number, text: string, points: number, voteStatus?: number | null, creatorId: number, postid: number, createdAt: string, updatedAt: string } };
+
 export type DeletePostMutationVariables = Exact<{
   id: Scalars['Int'];
 }>;
@@ -194,7 +264,7 @@ export type ForgotPasswordMutationVariables = Exact<{
 }>;
 
 
-export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: boolean };
+export type ForgotPasswordMutation = { __typename?: 'Mutation', forgotPassword: { __typename?: 'Link', link: string } };
 
 export type LoginMutationVariables = Exact<{
   usernameOrEmail: Scalars['String'];
@@ -261,6 +331,13 @@ export type UserPostsQueryVariables = Exact<{
 
 
 export type UserPostsQuery = { __typename?: 'Query', userPosts: { __typename?: 'userPosts', posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, category: string, points: number, textSnippet: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string } }> } };
+
+export type UserUpdootsQueryVariables = Exact<{
+  userId: Scalars['Int'];
+}>;
+
+
+export type UserUpdootsQuery = { __typename?: 'Query', userUpdoots: { __typename?: 'userUpdoots', updoots: Array<{ __typename?: 'Updoot', userId: number }> } };
 
 export const PostSnippetFragmentDoc = gql`
     fragment PostSnippet on Post {
@@ -338,6 +415,24 @@ export const CreatePostDocument = gql`
 export function useCreatePostMutation() {
   return Urql.useMutation<CreatePostMutation, CreatePostMutationVariables>(CreatePostDocument);
 };
+export const CreateReplyDocument = gql`
+    mutation CreateReply($input: ReplyInput!) {
+  createReply(input: $input) {
+    id
+    text
+    points
+    voteStatus
+    creatorId
+    postid
+    createdAt
+    updatedAt
+  }
+}
+    `;
+
+export function useCreateReplyMutation() {
+  return Urql.useMutation<CreateReplyMutation, CreateReplyMutationVariables>(CreateReplyDocument);
+};
 export const DeletePostDocument = gql`
     mutation DeletePost($id: Int!) {
   deletePost(id: $id)
@@ -349,7 +444,9 @@ export function useDeletePostMutation() {
 };
 export const ForgotPasswordDocument = gql`
     mutation ForgotPassword($email: String!) {
-  forgotPassword(email: $email)
+  forgotPassword(email: $email) {
+    link
+  }
 }
     `;
 
@@ -484,4 +581,17 @@ export const UserPostsDocument = gql`
 
 export function useUserPostsQuery(options: Omit<Urql.UseQueryArgs<UserPostsQueryVariables>, 'query'>) {
   return Urql.useQuery<UserPostsQuery, UserPostsQueryVariables>({ query: UserPostsDocument, ...options });
+};
+export const UserUpdootsDocument = gql`
+    query UserUpdoots($userId: Int!) {
+  userUpdoots(userId: $userId) {
+    updoots {
+      userId
+    }
+  }
+}
+    `;
+
+export function useUserUpdootsQuery(options: Omit<Urql.UseQueryArgs<UserUpdootsQueryVariables>, 'query'>) {
+  return Urql.useQuery<UserUpdootsQuery, UserUpdootsQueryVariables>({ query: UserUpdootsDocument, ...options });
 };

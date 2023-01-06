@@ -1,0 +1,7 @@
+query UserUpdoots($userId: Int!) {
+  userUpdoots(userId: $userId) {
+    updoots {
+      userId
+    }
+  }
+}

@@ -6,7 +6,11 @@ import { LogoLink } from "../components/LogoLink/LogoLink";
 import PostComponent from "../components/Post";
 import { InfoRow } from "../components/UserAccount/InfoRow";
 import { Wrapper } from "../components/Wrapper";
-import { useMeQuery, useUserPostsQuery } from "../generated/graphql";
+import {
+  useMeQuery,
+  useUserPostsQuery,
+  useUserUpdootsQuery,
+} from "../generated/graphql";
 import { createUrqlClient } from "../utils/createUrqlClient";
 
 interface userAccountProps {}
@@ -19,9 +23,10 @@ const UserAccount: React.FC<userAccountProps> = ({}) => {
   const variables = {
     userId: data?.me?.id as number,
   };
-
   const [{ data: userPostsData, fetching: userPostsFetching }] =
     useUserPostsQuery({ variables });
+  const [{ data: userUpdootsData, fetching: userUpdootsFetching }] =
+    useUserUpdootsQuery({ variables });
 
   let body = null;
 
@@ -40,7 +45,7 @@ const UserAccount: React.FC<userAccountProps> = ({}) => {
     body = (
       <Flex
         mt={10}
-        minH="300px"
+        minH="400px"
         minW="250px"
         borderRadius={5}
         border="1px solid gray"
@@ -49,8 +54,6 @@ const UserAccount: React.FC<userAccountProps> = ({}) => {
         justifyContent="space-between"
         flexDir="column"
       >
-        <Box color="white">{userPostsData?.userPosts.posts.length}</Box>
-
         <Text
           width="100%"
           mb={4}
@@ -66,7 +69,14 @@ const UserAccount: React.FC<userAccountProps> = ({}) => {
         <InfoRow keyText="Username :" infoData={data.me.username} />
         <InfoRow keyText="Email :" infoData={data.me.email} />
         <InfoRow keyText="Your unique id :" infoData={data.me.id} />
-
+        <InfoRow
+          keyText="Posts created :"
+          infoData={userPostsData?.userPosts.posts.length}
+        />
+        <InfoRow
+          keyText="Votes given :"
+          infoData={userUpdootsData?.userUpdoots.updoots.length}
+        />
         <InfoRow
           keyText="Account creation date :"
           infoData={data.me.createdAt}

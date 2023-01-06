@@ -1,0 +1,15 @@
+query Replies($limit: Int!, $cursor: String, $userid: Int!) {
+  replies(limit: $limit, cursor: $cursor, userid: $userid) {
+    hasMore
+    replies {
+      id
+      text
+      points
+      voteStatus
+      creatorId
+      postid
+      createdAt
+      updatedAt
+    }
+  }
+}

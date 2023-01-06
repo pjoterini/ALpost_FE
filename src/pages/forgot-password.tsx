@@ -7,10 +7,13 @@ import { InputField } from "../components/InputField";
 import { Flex, Button, Box } from "@chakra-ui/react";
 import { useForgotPasswordMutation } from "../generated/graphql";
 import { LogoLink } from "../components/LogoLink/LogoLink";
+import { SubmitBtn } from "../components/SubmitBtn";
 
 const ForgotPassword: React.FC<{}> = ({}) => {
   const [complete, setComplete] = useState(false);
+  const [linkMail, setLinkMail] = useState("");
   const [, forgotPassword] = useForgotPasswordMutation();
+
   return (
     <Wrapper variant="small">
       <Box pb={8}>
@@ -19,17 +22,23 @@ const ForgotPassword: React.FC<{}> = ({}) => {
       <Formik
         initialValues={{ email: "" }}
         onSubmit={async (values) => {
-          await forgotPassword(values);
+          let result = await forgotPassword(values);
+          let linkData = await result.data?.forgotPassword.link;
+          setLinkMail(linkData as string);
+
           setComplete(true);
-          console.log(values);
         }}
       >
         {({ isSubmitting }) =>
           complete ? (
-            <Box color="white">
-              if account with that email adress exists, we sent you an email
-              there.
-            </Box>
+            <>
+              <Box color="white" pb={5}>
+                If this address exists you should see working link beneath.
+              </Box>
+              <a href={linkMail}>
+                <Box color="green">{linkMail}</Box>
+              </a>
+            </>
           ) : (
             <Form>
               <Box mt={4}>
@@ -55,7 +64,7 @@ const ForgotPassword: React.FC<{}> = ({}) => {
                   border="1px solid white"
                   isLoading={isSubmitting}
                 >
-                  Reset password
+                  Send me link
                 </Button>
               </Flex>
             </Form>

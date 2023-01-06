@@ -10,6 +10,7 @@ import { useChangePasswordMutation } from "../../generated/graphql";
 import { createUrqlClient } from "../../utils/createUrqlClient";
 import { toErrorMap } from "../../utils/toErrorMap";
 import NextLink from "next/link";
+import { SubmitBtn } from "../../components/SubmitBtn";
 
 const ChangePassword: NextPage = () => {
   const router = useRouter();
@@ -55,15 +56,11 @@ const ChangePassword: NextPage = () => {
                 </NextLink>
               </Flex>
             ) : null}
-            <Button
-              mt={4}
-              type="submit"
-              color="aqua"
-              bgColor="teal"
-              isLoading={isSubmitting}
-            >
-              Change Password
-            </Button>
+            <SubmitBtn
+              state={isSubmitting}
+              text="Change password"
+              confirmation={false}
+            />
           </Form>
         )}
       </Formik>

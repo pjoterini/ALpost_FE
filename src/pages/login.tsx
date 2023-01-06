@@ -54,7 +54,7 @@ export const Login: React.FC<loginProps> = ({}) => {
                 type="password"
               />
             </Box>
-            <Flex pt={4} justify="space-between" align="center">
+            <Flex justify="space-between" alignItems="center">
               <SubmitBtn
                 text="Login"
                 state={isSubmitting}
@@ -62,7 +62,14 @@ export const Login: React.FC<loginProps> = ({}) => {
               />
 
               <NextLink href="/forgot-password">
-                <Box color="white2">Forgot password?</Box>
+                <Box
+                  color="white2"
+                  _hover={{
+                    color: "green",
+                  }}
+                >
+                  Forgot password?
+                </Box>
               </NextLink>
             </Flex>
           </Form>
