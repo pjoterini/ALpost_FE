@@ -1,5 +1,5 @@
-query Replies($limit: Int!, $cursor: String, $userid: Int!) {
-  replies(limit: $limit, cursor: $cursor, userid: $userid) {
+query Replies($limit: Int!, $cursor: String, $postid: Int!) {
+  replies(limit: $limit, cursor: $cursor, postid: $postid) {
     hasMore
     replies {
       id

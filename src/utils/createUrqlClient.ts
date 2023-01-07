@@ -72,6 +72,53 @@ function invalidateAllPosts(cache: Cache) {
   });
 }
 
+// export const cursorPaginationReplies = (): Resolver => {
+//   return (_parent, fieldArgs, cache, info) => {
+//     const { parentKey: entityKey, fieldName } = info;
+
+//     const allFields = cache.inspectFields(entityKey);
+
+//     const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
+//     const size = fieldInfos.length;
+//     if (size === 0) {
+//       return undefined;
+//     }
+
+//     const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
+//     const isItInCache = cache.resolve(
+//       cache.resolve(entityKey, fieldKey) as string,
+//       "replies"
+//     );
+//     info.partial = !isItInCache;
+//     let hasMore = true;
+//     const results: string[] = [];
+//     fieldInfos.forEach((fi) => {
+//       const key = cache.resolve(entityKey, fi.fieldKey) as Entity;
+//       const data = cache.resolve(key, "replies") as string[];
+//       const _hasMore = cache.resolve(key, "hasMore");
+//       console.log("data: ", hasMore, data);
+//       if (!_hasMore) {
+//         hasMore = _hasMore as boolean;
+//       }
+//       results.push(...data);
+//     });
+
+//     return {
+//       __typename: "PaginatedReplies",
+//       hasMore,
+//       replies: results,
+//     };
+//   };
+// };
+
+// function invalidateAllReplies(cache: Cache) {
+//   const allFields = cache.inspectFields("Query");
+//   const fieldInfos = allFields.filter((info) => info.fieldName === "replies");
+//   fieldInfos.forEach((fi) => {
+//     cache.invalidate("Query", "replies", fi.arguments || {});
+//   });
+// }
+
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = "";
   if (isServer()) {
@@ -89,10 +136,12 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
       cacheExchange({
         keys: {
           PaginatedPosts: () => null,
+          // PaginatedReplies: () => null,
         },
         resolvers: {
           Query: {
             posts: cursorPagination(),
+            // replies: cursorPaginationReplies(),
           },
         },
         updates: {
@@ -141,6 +190,9 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
             createPost: (_result, args, cache, info) => {
               invalidateAllPosts(cache);
             },
+            // createReply: (_result, args, cache, info) => {
+            //   invalidateAllReplies(cache);
+            // },
             deletePost: (_result, args, cache, info) => {
               cache.invalidate({
                 __typename: "Post",

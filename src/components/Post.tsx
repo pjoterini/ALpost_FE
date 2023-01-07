@@ -1,15 +1,21 @@
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Heading, Stack, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { EditDeletePostButtons } from "./EditDeletePostButtons";
 import { UpdootSection } from "./UpdootSection";
 import NextLink from "next/link";
-import { MeQuery, Post, useCreateReplyMutation } from "../generated/graphql";
+import {
+  MeQuery,
+  Post,
+  useCreateReplyMutation,
+  useRepliesQuery,
+} from "../generated/graphql";
 import { ChatIcon, ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
 import { SubmitBtn } from "./SubmitBtn";
 import { Formik, Form } from "formik";
 import { useRouter } from "next/router";
 import { useIsAuth } from "../utils/useIsAuth";
 import { InputField } from "./InputField";
+import ReplyComponent from "./ReplyComponent";
 
 interface PostComponentProps {
   post: {
@@ -31,7 +37,7 @@ interface PostComponentProps {
 }
 
 const PostComponent = ({ post, meData }: PostComponentProps) => {
-  // REPLY FORM
+  // REPLY FORM, CREATE REPLY
   const router = useRouter();
   useIsAuth();
   const [, createReply] = useCreateReplyMutation();
@@ -82,81 +88,158 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
         </Formik>
       ))
     : null;
-  // SHOW ANSWERS
+  // SHOW REPLIES, PAGINATION
+
+  const [variables, setVariables] = useState({
+    limit: 3,
+    cursor: null as null | string,
+    postid: post.id,
+  });
+  const [{ data, error, fetching }] = useRepliesQuery({
+    variables,
+  });
+
+  const [showReplies, setShowReplies] = useState(false);
+  let show;
+  showReplies ? (show = "") : (show = "none");
 
   return (
-    <>
-      <Box
-        width="100%"
-        bg="primary"
-        shadow="md"
-        borderColor="secondary"
-        borderWidth="2px"
-        borderRadius="5px"
-      >
-        <Flex w="100%" alignItems="center" justifyContent="space-between">
-          <UpdootSection post={post} />
+    <Box
+      width="100%"
+      bg="primary"
+      shadow="md"
+      borderColor="secondary"
+      borderWidth="2px"
+      borderRadius="5px"
+    >
+      <Flex w="100%" alignItems="center" justifyContent="space-between">
+        <UpdootSection post={post} />
 
-          <Flex w="100%" justifyContent="space-between">
-            <Flex mt={6} ml={4} flexDir="column">
-              <NextLink href="/post/[id]" as={`/post/${post.id}`}>
-                <Heading color="white" fontSize="lg" fontWeight="medium">
-                  {post.title}
-                </Heading>
-              </NextLink>
-              <Text my={4} fontFamily="monospace" color="white1">
-                {post.textSnippet}..
-              </Text>
-            </Flex>
+        <Flex w="100%" justifyContent="space-between">
+          <Flex mt={6} ml={4} flexDir="column">
+            <NextLink href="/post/[id]" as={`/post/${post.id}`}>
+              <Heading color="white" fontSize="lg" fontWeight="medium">
+                {post.title}
+              </Heading>
+            </NextLink>
+            <Text my={4} fontFamily="monospace" color="white1">
+              {post.textSnippet}..
+            </Text>
+          </Flex>
 
-            <Flex
-              my={5}
-              mx={5}
-              flexShrink={0}
-              flexDir="column"
-              justifyContent="center"
-              alignItems="center"
-              color="white2"
-              fontSize="xs"
-            >
-              <Box>POSTED BY</Box>
-              <Text pb={2} fontSize="md" color="green">
-                {post.creator.username}
-              </Text>
-              <Box>CATEGORY</Box>
-              <Text pb={2} fontSize="md" color="green">
-                {post.category}
-              </Text>
-              {meData?.me?.id !== post.creator.id ? null : (
-                <EditDeletePostButtons id={post.id} />
-              )}
-            </Flex>
+          <Flex
+            my={5}
+            mx={5}
+            flexShrink={0}
+            flexDir="column"
+            justifyContent="center"
+            alignItems="center"
+            color="white2"
+            fontSize="xs"
+          >
+            <Box>POSTED BY</Box>
+            <Text pb={2} fontSize="md" color="green">
+              {post.creator.username}
+            </Text>
+            <Box>CATEGORY</Box>
+            <Text pb={2} fontSize="md" color="green">
+              {post.category}
+            </Text>
+            {meData?.me?.id !== post.creator.id ? null : (
+              <EditDeletePostButtons id={post.id} />
+            )}
           </Flex>
         </Flex>
-        {/* if there are replies whos this btn else show text 'no answers yet */}
-        <Flex color="white2" alignItems="center" justifyContent="center">
-          <ChatIcon h={4} />
-          <Text color="white" ml={1} mr={8} mb={1}>
-            &#40; 4 &#41;
-          </Text>
-          <Text mb={1}>See Answers</Text>
-          <ChevronDownIcon color="white" h={7} w={7} />
+      </Flex>
+
+      <Flex color="white2" alignItems="center" justifyContent="center">
+        <ChatIcon h={4} />
+        <Text color="white" ml={1} mr={8} mb={1}>
+          &#40;
+          {data?.replies.replies.length}
+          &#41;
+        </Text>
+        {data?.replies.replies.length !== 0 ? (
           <Button
             onClick={() => {
-              setShowReplyInputs((prev) => !prev);
+              setShowReplies((prev) => !prev);
             }}
-            color="green"
-            ml={5}
           >
-            <Text color="white" mb={1} mr={2}>
-              Reply
-            </Text>
-            <RepeatIcon />
+            <Text mb={1}>See Answers</Text>
+            <ChevronDownIcon color="white" h={7} w={7} />
+          </Button>
+        ) : (
+          <Text mb={1}>Be first to answer!</Text>
+        )}
+
+        <Button
+          onClick={() => {
+            setShowReplyInputs((prev) => !prev);
+          }}
+          color="green"
+          ml={5}
+        >
+          <Text color="white" mb={1} mr={2}>
+            Reply
+          </Text>
+          <RepeatIcon />
+        </Button>
+      </Flex>
+      {replyInputs}
+      {fetching && !data ? (
+        <Text color="white">loading...</Text>
+      ) : (
+        <Stack
+          style={{
+            display: `${show}`,
+            marginInline: "auto",
+            width: "96%",
+          }}
+        >
+          {data!.replies.replies.map((reply) =>
+            !reply ? null : (
+              <Box key={reply.id}>
+                <ReplyComponent reply={reply} meData={meData} />
+                <Box mb={4} />
+              </Box>
+            )
+          )}
+        </Stack>
+      )}
+      {data && data.replies.hasMore ? (
+        <Flex>
+          <Button
+            style={{
+              display: `${show}`,
+            }}
+            onClick={() => {
+              setVariables({
+                limit: variables.limit,
+                cursor:
+                  data.replies.replies[data.replies.replies.length - 1]
+                    .createdAt,
+                postid: variables.postid,
+              });
+            }}
+            isLoading={fetching}
+            _hover={{
+              bgColor: "green",
+              borderColor: "green",
+              color: "white",
+            }}
+            mb={2}
+            px={6}
+            mx="auto"
+            type="submit"
+            color="white"
+            borderColor="green"
+            border="1px solid white"
+          >
+            Load More
           </Button>
         </Flex>
-        {replyInputs}
-      </Box>
-    </>
+      ) : null}
+    </Box>
   );
 };
 

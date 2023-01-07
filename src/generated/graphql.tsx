@@ -97,6 +97,12 @@ export type PaginatedPosts = {
   posts: Array<Post>;
 };
 
+export type PaginatedReplies = {
+  __typename?: 'PaginatedReplies';
+  hasMore: Scalars['Boolean'];
+  replies: Array<Reply>;
+};
+
 export type Post = {
   __typename?: 'Post';
   category: Scalars['String'];
@@ -124,7 +130,7 @@ export type Query = {
   me?: Maybe<User>;
   post?: Maybe<Post>;
   posts: PaginatedPosts;
-  replies: Replies;
+  replies: PaginatedReplies;
   userPosts: UserPosts;
   userUpdoots: UserUpdoots;
 };
@@ -143,7 +149,9 @@ export type QueryPostsArgs = {
 
 
 export type QueryRepliesArgs = {
-  userId: Scalars['Int'];
+  cursor?: InputMaybe<Scalars['String']>;
+  limit: Scalars['Int'];
+  postid: Scalars['Int'];
 };
 
 
@@ -156,11 +164,6 @@ export type QueryUserUpdootsArgs = {
   userId: Scalars['Int'];
 };
 
-export type Replies = {
-  __typename?: 'Replies';
-  replies: Array<Reply>;
-};
-
 export type Reply = {
   __typename?: 'Reply';
   createdAt: Scalars['String'];
@@ -171,13 +174,22 @@ export type Reply = {
   postid: Scalars['Int'];
   text: Scalars['String'];
   updatedAt: Scalars['String'];
-  updoots: Array<Updoot>;
+  updoots: Array<ReplyUpdoot>;
   voteStatus?: Maybe<Scalars['Int']>;
 };
 
 export type ReplyInput = {
   postid: Scalars['Int'];
   text: Scalars['String'];
+};
+
+export type ReplyUpdoot = {
+  __typename?: 'ReplyUpdoot';
+  reply: Reply;
+  replyId: Scalars['Float'];
+  user: User;
+  userId: Scalars['Float'];
+  value: Scalars['Float'];
 };
 
 export type Updoot = {
@@ -324,6 +336,15 @@ export type PostsQueryVariables = Exact<{
 
 
 export type PostsQuery = { __typename?: 'Query', posts: { __typename?: 'PaginatedPosts', hasMore: boolean, posts: Array<{ __typename?: 'Post', id: number, createdAt: string, updatedAt: string, title: string, category: string, points: number, textSnippet: string, voteStatus?: number | null, creator: { __typename?: 'User', id: number, username: string } }> } };
+
+export type RepliesQueryVariables = Exact<{
+  limit: Scalars['Int'];
+  cursor?: InputMaybe<Scalars['String']>;
+  postid: Scalars['Int'];
+}>;
+
+
+export type RepliesQuery = { __typename?: 'Query', replies: { __typename?: 'PaginatedReplies', hasMore: boolean, replies: Array<{ __typename?: 'Reply', id: number, text: string, points: number, voteStatus?: number | null, creatorId: number, postid: number, createdAt: string, updatedAt: string }> } };
 
 export type UserPostsQueryVariables = Exact<{
   userId: Scalars['Int'];
@@ -568,6 +589,27 @@ export const PostsDocument = gql`
 
 export function usePostsQuery(options: Omit<Urql.UseQueryArgs<PostsQueryVariables>, 'query'>) {
   return Urql.useQuery<PostsQuery, PostsQueryVariables>({ query: PostsDocument, ...options });
+};
+export const RepliesDocument = gql`
+    query Replies($limit: Int!, $cursor: String, $postid: Int!) {
+  replies(limit: $limit, cursor: $cursor, postid: $postid) {
+    hasMore
+    replies {
+      id
+      text
+      points
+      voteStatus
+      creatorId
+      postid
+      createdAt
+      updatedAt
+    }
+  }
+}
+    `;
+
+export function useRepliesQuery(options: Omit<Urql.UseQueryArgs<RepliesQueryVariables>, 'query'>) {
+  return Urql.useQuery<RepliesQuery, RepliesQueryVariables>({ query: RepliesDocument, ...options });
 };
 export const UserPostsDocument = gql`
     query UserPosts($userId: Int!) {
