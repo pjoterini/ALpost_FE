@@ -1,0 +1,3 @@
+mutation DeleteReply($id: Int!) {
+  deleteReply(id: $id)
+}

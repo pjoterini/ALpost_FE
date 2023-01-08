@@ -7,12 +7,14 @@ import {
 import { dedupExchange, fetchExchange } from "urql";
 import {
   DeletePostMutationVariables,
+  DeleteReplyMutationVariables,
   LoginMutation,
   LogoutMutation,
   MeDocument,
   MeQuery,
   RegisterMutation,
   VoteMutationVariables,
+  VoteReplyMutationVariables,
 } from "../generated/graphql";
 import { betterUpdateQuery } from "./betterUpdateQuery";
 import { stringifyVariables, gql } from "@urql/core";
@@ -72,52 +74,13 @@ function invalidateAllPosts(cache: Cache) {
   });
 }
 
-// export const cursorPaginationReplies = (): Resolver => {
-//   return (_parent, fieldArgs, cache, info) => {
-//     const { parentKey: entityKey, fieldName } = info;
-
-//     const allFields = cache.inspectFields(entityKey);
-
-//     const fieldInfos = allFields.filter((info) => info.fieldName === fieldName);
-//     const size = fieldInfos.length;
-//     if (size === 0) {
-//       return undefined;
-//     }
-
-//     const fieldKey = `${fieldName}(${stringifyVariables(fieldArgs)})`;
-//     const isItInCache = cache.resolve(
-//       cache.resolve(entityKey, fieldKey) as string,
-//       "replies"
-//     );
-//     info.partial = !isItInCache;
-//     let hasMore = true;
-//     const results: string[] = [];
-//     fieldInfos.forEach((fi) => {
-//       const key = cache.resolve(entityKey, fi.fieldKey) as Entity;
-//       const data = cache.resolve(key, "replies") as string[];
-//       const _hasMore = cache.resolve(key, "hasMore");
-//       console.log("data: ", hasMore, data);
-//       if (!_hasMore) {
-//         hasMore = _hasMore as boolean;
-//       }
-//       results.push(...data);
-//     });
-
-//     return {
-//       __typename: "PaginatedReplies",
-//       hasMore,
-//       replies: results,
-//     };
-//   };
-// };
-
-// function invalidateAllReplies(cache: Cache) {
-//   const allFields = cache.inspectFields("Query");
-//   const fieldInfos = allFields.filter((info) => info.fieldName === "replies");
-//   fieldInfos.forEach((fi) => {
-//     cache.invalidate("Query", "replies", fi.arguments || {});
-//   });
-// }
+function invalidateAllReplies(cache: Cache) {
+  const allFields = cache.inspectFields("Query");
+  const fieldInfos = allFields.filter((info) => info.fieldName === "replies");
+  fieldInfos.forEach((fi) => {
+    cache.invalidate("Query", "replies", fi.arguments || {});
+  });
+}
 
 export const createUrqlClient = (ssrExchange: any, ctx: any) => {
   let cookie = "";
@@ -136,12 +99,11 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
       cacheExchange({
         keys: {
           PaginatedPosts: () => null,
-          // PaginatedReplies: () => null,
+          PaginatedReplies: () => null,
         },
         resolvers: {
           Query: {
             posts: cursorPagination(),
-            // replies: cursorPaginationReplies(),
           },
         },
         updates: {
@@ -187,16 +149,63 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 }
               }
             },
+            voteReply: (_result, args, cache, info) => {
+              const { replyId, value } = args as VoteReplyMutationVariables;
+              const data = cache.readFragment(
+                gql`
+                  fragment _ on Reply {
+                    id
+                    points
+                    voteStatus
+                  }
+                `,
+                { id: replyId }
+              );
+              if (data) {
+                if (data.voteStatus === value) {
+                  const newPoints = (data.points as number) - value;
+                  data.voteStatus = null;
+                  cache.writeFragment(
+                    gql`
+                      fragment __ on Reply {
+                        points
+                        voteStatus
+                      }
+                    `,
+                    { id: replyId, points: newPoints, voteStatus: null }
+                  );
+                } else {
+                  const newPoints =
+                    (data.points as number) +
+                    (!data.voteStatus ? 1 : 2) * value;
+                  cache.writeFragment(
+                    gql`
+                      fragment __ on Reply {
+                        points
+                        voteStatus
+                      }
+                    `,
+                    { id: replyId, points: newPoints, voteStatus: value }
+                  );
+                }
+              }
+            },
             createPost: (_result, args, cache, info) => {
               invalidateAllPosts(cache);
             },
-            // createReply: (_result, args, cache, info) => {
-            //   invalidateAllReplies(cache);
-            // },
+            createReply: (_result, args, cache, info) => {
+              invalidateAllReplies(cache);
+            },
             deletePost: (_result, args, cache, info) => {
               cache.invalidate({
                 __typename: "Post",
                 id: (args as DeletePostMutationVariables).id,
+              });
+            },
+            deleteReply: (_result, args, cache, info) => {
+              cache.invalidate({
+                __typename: "Reply",
+                id: (args as DeleteReplyMutationVariables).id,
               });
             },
             logout: (_result, args, cache, info) => {
@@ -224,6 +233,7 @@ export const createUrqlClient = (ssrExchange: any, ctx: any) => {
                 }
               );
               invalidateAllPosts(cache);
+              invalidateAllReplies(cache);
             },
             register: (_result, args, cache, info) => {
               betterUpdateQuery<RegisterMutation, MeQuery>(

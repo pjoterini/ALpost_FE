@@ -56,6 +56,8 @@ const CreatePost: React.FC<{}> = ({}) => {
                 text="Create Post"
                 state={isSubmitting}
                 confirmation={false}
+                action=""
+                type=""
               />
             </Flex>
           </Form>

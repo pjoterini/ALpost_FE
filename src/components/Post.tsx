@@ -39,7 +39,6 @@ interface PostComponentProps {
 const PostComponent = ({ post, meData }: PostComponentProps) => {
   // REPLY FORM, CREATE REPLY
   const router = useRouter();
-  useIsAuth();
   const [, createReply] = useCreateReplyMutation();
 
   const [showReplyInputs, setShowReplyInputs] = useState(false);
@@ -81,6 +80,8 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
                   text="Create Reply"
                   state={isSubmitting}
                   confirmation={false}
+                  action="create"
+                  type="reply"
                 />
               </Flex>
             </Form>
@@ -89,9 +90,9 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
       ))
     : null;
   // SHOW REPLIES, PAGINATION
-
+  const [answerCountFive, setAnswersCountFive] = useState(false);
   const [variables, setVariables] = useState({
-    limit: 3,
+    limit: 5,
     cursor: null as null | string,
     postid: post.id,
   });
@@ -102,6 +103,17 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
   const [showReplies, setShowReplies] = useState(false);
   let show;
   showReplies ? (show = "") : (show = "none");
+
+  if (!fetching && !data) {
+    return (
+      <Box>
+        <Text color="white">
+          you got query for replies failed for some reason
+        </Text>
+        ;<Text color="white">{error?.message}</Text>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -156,7 +168,8 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
         <ChatIcon h={4} />
         <Text color="white" ml={1} mr={8} mb={1}>
           &#40;
-          {data?.replies.replies.length}
+          {(data && data.replies.hasMore) || answerCountFive ? ">" : ""}
+          {answerCountFive ? 5 : data?.replies.replies.length}
           &#41;
         </Text>
         {data?.replies.replies.length !== 0 ? (
@@ -165,7 +178,14 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
               setShowReplies((prev) => !prev);
             }}
           >
-            <Text mb={1}>See Answers</Text>
+            <Text
+              _hover={{
+                color: "white",
+              }}
+              mb={1}
+            >
+              See Answers
+            </Text>
             <ChevronDownIcon color="white" h={7} w={7} />
           </Button>
         ) : (
@@ -213,6 +233,7 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
               display: `${show}`,
             }}
             onClick={() => {
+              setAnswersCountFive(true);
               setVariables({
                 limit: variables.limit,
                 cursor:
@@ -235,7 +256,7 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
             borderColor="green"
             border="1px solid white"
           >
-            Load More
+            Load Others
           </Button>
         </Flex>
       ) : null}

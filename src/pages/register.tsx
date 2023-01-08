@@ -57,6 +57,8 @@ export const Register: React.FC<registerProps> = ({}) => {
               text="Register"
               state={isSubmitting}
               confirmation={false}
+              action=""
+              type=""
             />
           </Form>
         )}

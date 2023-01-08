@@ -14,7 +14,7 @@ export const PostsPage: React.FC<PostsPageProps> = ({
   searchFor,
 }) => {
   const [variables, setVariables] = useState({
-    limit: 15,
+    limit: 5,
     cursor: null as null | string,
     search: searchFor,
   });

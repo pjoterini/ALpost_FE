@@ -1,7 +1,11 @@
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import { background, Flex, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
-import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
+import {
+  PostSnippetFragment,
+  useVoteMutation,
+  useVoteReplyMutation,
+} from "../generated/graphql";
 
 interface ReplyUpdootSectionProps {
   reply: {
@@ -12,14 +16,17 @@ interface ReplyUpdootSectionProps {
     points: number;
     text: string;
     voteStatus?: number | null | undefined;
-    creatorId: number;
+    creator: {
+      id: number;
+      username: string;
+    };
   };
 }
 
 export const ReplyUpdootSection: React.FC<ReplyUpdootSectionProps> = ({
   reply,
 }) => {
-  const [, vote] = useVoteMutation();
+  const [, voteReply] = useVoteReplyMutation();
   let voteStatusColor;
 
   if (reply.voteStatus === 1) {
@@ -49,13 +56,13 @@ export const ReplyUpdootSection: React.FC<ReplyUpdootSectionProps> = ({
         aria-label="updoot reply"
         onClick={async () => {
           if (reply.voteStatus === 1) {
-            await vote({
-              postId: reply.id,
+            await voteReply({
+              replyId: reply.id,
               value: 1,
             });
           } else {
-            await vote({
-              postId: reply.id,
+            await voteReply({
+              replyId: reply.id,
               value: 1,
             });
           }
@@ -83,13 +90,13 @@ export const ReplyUpdootSection: React.FC<ReplyUpdootSectionProps> = ({
         aria-label="downdoot reply"
         onClick={async () => {
           if (reply.voteStatus === -1) {
-            await vote({
-              postId: reply.id,
+            await voteReply({
+              replyId: reply.id,
               value: -1,
             });
           } else {
-            await vote({
-              postId: reply.id,
+            await voteReply({
+              replyId: reply.id,
               value: -1,
             });
           }

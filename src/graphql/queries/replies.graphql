@@ -6,7 +6,10 @@ query Replies($limit: Int!, $cursor: String, $postid: Int!) {
       text
       points
       voteStatus
-      creatorId
+      creator {
+        id
+        username
+      }
       postid
       createdAt
       updatedAt

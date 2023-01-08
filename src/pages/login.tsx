@@ -59,6 +59,8 @@ export const Login: React.FC<loginProps> = ({}) => {
                 text="Login"
                 state={isSubmitting}
                 confirmation={false}
+                type=""
+                action=""
               />
 
               <NextLink href="/forgot-password">

@@ -1,10 +1,8 @@
-import { ChatIcon, ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
-import { Flex, Heading, Button, Box, Text } from "@chakra-ui/react";
-import NextLink from "next/link";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { MeQuery } from "../generated/graphql";
 import { EditDeletePostButtons } from "./EditDeletePostButtons";
+import { EditDeleteReplyButtons } from "./EditDeleteReplyButtons";
 import { ReplyUpdootSection } from "./replyUpdootSection";
-import { UpdootSection } from "./UpdootSection";
 
 interface ReplyComponentProps {
   reply: {
@@ -14,7 +12,11 @@ interface ReplyComponentProps {
     points: number;
     text: string;
     voteStatus?: number | null | undefined;
-    creatorId: number;
+    creator: {
+      __typename?: "User" | undefined;
+      id: number;
+      username: string;
+    };
   };
   meData: MeQuery | undefined;
 }
@@ -51,11 +53,11 @@ const ReplyComponent = ({ reply, meData }: ReplyComponentProps) => {
             >
               <Box>POSTED BY</Box>
               <Text pb={2} fontSize="md" color="green">
-                {reply.creatorId}
+                {reply.creator.username}
               </Text>
 
-              {meData?.me?.id !== reply.creatorId ? null : (
-                <EditDeletePostButtons id={reply.id} />
+              {meData?.me?.id !== reply.creator.id ? null : (
+                <EditDeleteReplyButtons id={reply.id} />
               )}
             </Flex>
           </Flex>

@@ -1,0 +1,3 @@
+mutation VoteReply($value: Int!, $replyId: Int!) {
+  voteReply(value: $value, replyId: $replyId)
+}

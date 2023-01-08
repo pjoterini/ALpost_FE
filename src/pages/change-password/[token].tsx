@@ -60,6 +60,8 @@ const ChangePassword: NextPage = () => {
               state={isSubmitting}
               text="Change password"
               confirmation={false}
+              type=""
+              action=""
             />
           </Form>
         )}

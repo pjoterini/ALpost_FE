@@ -5,12 +5,16 @@ interface SubmitBtnProps {
   state: boolean;
   text: string;
   confirmation: boolean;
+  type: string;
+  action: string;
 }
 
 export const SubmitBtn: React.FC<SubmitBtnProps> = ({
   state,
   text,
   confirmation,
+  type,
+  action,
 }) => {
   return (
     <Button
@@ -30,7 +34,7 @@ export const SubmitBtn: React.FC<SubmitBtnProps> = ({
         confirmation
           ? (e) => {
               const result = confirm(
-                "Are you sure you want to update this post?"
+                `Are you sure you want to ${action} this ${type}?`
               );
               if (result === false) {
                 e.preventDefault();

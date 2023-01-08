@@ -1,4 +1,4 @@
-import { Box, Flex } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { withUrqlClient } from "next-urql";
 import { useRouter } from "next/router";
@@ -6,35 +6,35 @@ import { InputField } from "../../../components/InputField";
 import { Layout } from "../../../components/Layout";
 import { SubmitBtn } from "../../../components/SubmitBtn";
 import {
-  usePostQuery,
-  useUpdatePostMutation,
+  useReplyQuery,
+  useUpdateReplyMutation,
 } from "../../../generated/graphql";
 import { createUrqlClient } from "../../../utils/createUrqlClient";
 import { useGetIntId } from "../../../utils/useGetIntId";
 
-const EditPost: React.FC<{}> = ({}) => {
+const EditReply: React.FC<{}> = ({}) => {
   const router = useRouter();
   const intId = useGetIntId();
-  const [{ data, fetching }] = usePostQuery({
+  const [{ data, fetching }] = useReplyQuery({
     pause: intId === -1,
     variables: {
       id: intId,
     },
   });
-  const [, updatePost] = useUpdatePostMutation();
+  const [, updateReply] = useUpdateReplyMutation();
 
   if (fetching) {
     return (
       <Layout>
-        <div>loading...</div>
+        <Text color="white">loading...</Text>
       </Layout>
     );
   }
 
-  if (!data?.post) {
+  if (!data?.reply) {
     return (
       <Layout>
-        <Box>Could not find post</Box>
+        <Box>Could not find reply</Box>
       </Layout>
     );
   }
@@ -43,47 +43,31 @@ const EditPost: React.FC<{}> = ({}) => {
     <Layout variant="small">
       <Formik
         initialValues={{
-          title: data.post.title,
-          category: data.post.category,
-          text: data.post.text,
+          text: data.reply.text,
         }}
         onSubmit={async (values) => {
-          updatePost({ id: intId, ...values });
+          updateReply({ id: intId, ...values });
           router.back();
         }}
       >
         {({ isSubmitting }) => (
           <Form>
-            <InputField
-              maxLength={120}
-              name="title"
-              placeholder="title"
-              label="Title"
-            />
-            <Box mt={4}>
-              <InputField
-                name="category"
-                placeholder="category"
-                label="Category"
-                maxLength={20}
-              />
-            </Box>
-            <Box mt={4}>
+            <Box my={4}>
               <InputField
                 textarea
                 name="text"
                 placeholder="text"
-                label="Body"
-                maxLength={1000}
+                label="Reply"
+                maxLength={400}
               />
             </Box>
             <Flex justify="space-between" align="center">
               <SubmitBtn
-                text="Update post"
+                text="Update reply"
                 state={isSubmitting}
                 confirmation={true}
+                type="Reply"
                 action="update"
-                type="post"
               />
             </Flex>
           </Form>
@@ -93,4 +77,4 @@ const EditPost: React.FC<{}> = ({}) => {
   );
 };
 
-export default withUrqlClient(createUrqlClient)(EditPost);
+export default withUrqlClient(createUrqlClient)(EditReply);

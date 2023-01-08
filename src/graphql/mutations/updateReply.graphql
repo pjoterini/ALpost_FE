@@ -1,0 +1,6 @@
+mutation UpdateReply($id: Int!, $text: String!) {
+  updateReply(id: $id, text: $text) {
+    id
+    text
+  }
+}
