@@ -1,6 +1,6 @@
 import { Heading } from "@chakra-ui/react";
+import { useRouter } from "next/router";
 import React from "react";
-import { Router, useRouter } from "next/router";
 
 interface CategoryLinkProps {
   url: string;
@@ -20,7 +20,7 @@ export const CategoryLink: React.FC<CategoryLinkProps> = ({
         }}
         transition="500ms"
         color={router.pathname.includes(category) ? "green" : "white2"}
-        letterSpacing=".1em"
+        letterSpacing={{ base: "0em", sm: ".1em" }}
         fontWeight="normal"
         textTransform="uppercase"
         size="md"

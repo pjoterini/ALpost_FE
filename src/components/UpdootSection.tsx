@@ -1,7 +1,11 @@
 import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { background, Flex, IconButton, Text } from "@chakra-ui/react";
+import { background, Box, Flex, IconButton, Text } from "@chakra-ui/react";
 import React from "react";
-import { PostSnippetFragment, useVoteMutation } from "../generated/graphql";
+import {
+  PostSnippetFragment,
+  useMeQuery,
+  useVoteMutation,
+} from "../generated/graphql";
 
 interface UpdootSectionProps {
   post: {

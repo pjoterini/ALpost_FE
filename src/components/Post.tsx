@@ -127,14 +127,18 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
       <Flex w="100%" alignItems="center" justifyContent="space-between">
         <UpdootSection post={post} />
 
-        <Flex w="100%" justifyContent="space-between">
+        <Flex
+          flexDir={{ base: "column", sm: "row" }}
+          w="100%"
+          justifyContent="space-between"
+        >
           <Flex mt={6} ml={4} flexDir="column">
             <NextLink href="/post/[id]" as={`/post/${post.id}`}>
               <Heading color="white" fontSize="lg" fontWeight="medium">
                 {post.title}
               </Heading>
             </NextLink>
-            <Text my={4} fontFamily="monospace" color="white1">
+            <Text my={4} fontWeight="light" color="white">
               {post.textSnippet}..
             </Text>
           </Flex>

@@ -45,7 +45,9 @@ export const InputField: React.FC<InputFieldProps> = ({
         {...props}
         id={field.name}
       />
-      {error ? <FormErrorMessage>{error}</FormErrorMessage> : null}
+      {error ? (
+        <FormErrorMessage color="white">{error}</FormErrorMessage>
+      ) : null}
     </FormControl>
   );
 };

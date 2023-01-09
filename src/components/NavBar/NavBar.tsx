@@ -34,14 +34,27 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
     );
   } else {
     body = (
-      <Flex align="center">
+      <Flex flexDir={{ base: "column", sm: "row" }} align="center">
         <CreatePostBtn />
 
         <Flex alignItems="center">
           <NextLink href="/user-account" legacyBehavior passHref>
-            <Button>
-              <SettingsIcon color="gray" />
-              <Text ml={2} mr={4} fontSize="xl" color="green">
+            <Button role="group">
+              <SettingsIcon
+                _groupHover={{
+                  color: "white",
+                }}
+                color="gray"
+              />
+              <Text
+                _groupHover={{
+                  color: "white",
+                }}
+                ml={2}
+                mr={4}
+                fontSize="xl"
+                color="green"
+              >
                 {data.me.username}
               </Text>
             </Button>
@@ -73,6 +86,7 @@ export const NavBar: React.FC<NavBarProps> = ({}) => {
         p={4}
       >
         <Flex
+          flexDir={{ base: "column", sm: "row" }}
           alignItems="center"
           justifyContent="space-between"
           margin="auto"
