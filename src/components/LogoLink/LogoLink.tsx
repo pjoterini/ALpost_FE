@@ -1,16 +1,34 @@
 import React from "react";
-import NextLink from "next/link";
-import styles from "./logolink.module.css";
+import Link from "next/link";
+import { Heading, Text } from "@chakra-ui/react";
 
 interface logoLinkProps {}
 
 export const LogoLink: React.FC<logoLinkProps> = ({}) => {
   return (
-    <NextLink href="/">
-      <header>
-        <span className={styles.al}>AL</span>
-        <span className={styles.post}>POST</span>
-      </header>
-    </NextLink>
+    <Link href="/">
+      <Heading>
+        <Text
+          as="span"
+          letterSpacing="-0.15cm"
+          fontSize="50px"
+          fontWeight="500"
+          bgGradient="linear(to-t, #501f3a, #e6e6e6)"
+          bgClip="text"
+        >
+          AL
+        </Text>
+        <Text
+          as="span"
+          letterSpacing="-0.05cm"
+          fontSize="35px"
+          fontWeight="400"
+          bgGradient="linear(to-t, #bfbfbf, #595959)"
+          bgClip="text"
+        >
+          POST
+        </Text>
+      </Heading>
+    </Link>
   );
 };

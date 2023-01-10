@@ -1,4 +1,4 @@
-import { Stack, Flex, Button, Heading } from "@chakra-ui/react";
+import { Stack, Flex, Button, Heading, Text } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useMeQuery, usePostsQuery } from "../generated/graphql";
 import { Layout } from "./Layout";
@@ -38,7 +38,7 @@ export const PostsPage: React.FC<PostsPageProps> = ({
         Category : {categoryHeading}
       </Heading>
       {fetching && !data ? (
-        <div color="white">loading...</div>
+        <Text color="white">loading...</Text>
       ) : (
         <Stack spacing={10}>
           {data!.posts.posts.map((post) =>
