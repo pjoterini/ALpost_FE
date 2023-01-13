@@ -33,6 +33,7 @@ const CreatePost: React.FC<{}> = ({}) => {
               placeholder="title"
               label="Title"
               maxLength={120}
+              required={true}
             />
             <Box mt={4}>
               <InputField
@@ -40,6 +41,7 @@ const CreatePost: React.FC<{}> = ({}) => {
                 placeholder="category"
                 label="Category"
                 maxLength={20}
+                required={true}
               />
             </Box>
             <Box mt={4}>
@@ -49,6 +51,7 @@ const CreatePost: React.FC<{}> = ({}) => {
                 placeholder="text"
                 label="Body"
                 maxLength={1000}
+                required={true}
               />
             </Box>
             <Flex justify="space-between" align="center">

@@ -59,6 +59,7 @@ const EditReply: React.FC<{}> = ({}) => {
                 placeholder="text"
                 label="Reply"
                 maxLength={400}
+                required={true}
               />
             </Box>
             <Flex justify="space-between" align="center">
