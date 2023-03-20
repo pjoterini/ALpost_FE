@@ -16,7 +16,7 @@ export const CreatePostBtn: React.FC<CreatePostBtnProps> = ({}) => {
         transition="1s"
         color="white2"
         borderWidth="1px"
-        borderColor="red"
+        borderColor="accent"
         bgGradient="linear(to-r, primary, secondary)"
         flexDir={{ base: "column", sm: "row" }}
         mr={{ base: 0, sm: 10 }}

@@ -39,6 +39,7 @@ interface PostComponentProps {
 const PostComponent = ({ post, meData }: PostComponentProps) => {
   // REPLY FORM, CREATE REPLY
   const router = useRouter();
+  useIsAuth();
   const [, createReply] = useCreateReplyMutation();
 
   const [showReplyInputs, setShowReplyInputs] = useState(false);
@@ -120,8 +121,8 @@ const PostComponent = ({ post, meData }: PostComponentProps) => {
       width="100%"
       bg="primary"
       shadow="md"
-      borderColor="secondary"
-      borderWidth="2px"
+      borderColor="accent"
+      borderWidth="1px"
       borderRadius="5px"
     >
       <Flex w="100%" alignItems="center" justifyContent="space-between">

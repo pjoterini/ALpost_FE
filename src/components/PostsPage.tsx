@@ -34,8 +34,11 @@ export const PostsPage: React.FC<PostsPageProps> = ({
 
   return (
     <Layout>
-      <Heading pb={5} color="white2" as="h2" size="md" noOfLines={1}>
-        Category : {categoryHeading}
+      <Heading pb={5} color="white2" as="h3" size="md" noOfLines={1}>
+        Currently Browsing :{" "}
+        <Text as="span" color="accent" textTransform="uppercase">
+          {categoryHeading}
+        </Text>
       </Heading>
       {fetching && !data ? (
         <Text color="white">loading...</Text>

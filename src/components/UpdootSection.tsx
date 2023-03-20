@@ -50,8 +50,8 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
           color: "gray",
         }}
         size="sm"
-        color="gray"
-        bgColor={post.voteStatus === 1 ? "dark1" : "secondary"}
+        color={post.voteStatus === -1 ? "white" : "gray"}
+        bgColor={post.voteStatus === 1 ? "green" : "secondary"}
         borderWidth="2px"
         borderColor={post.voteStatus === 1 ? "green" : "secondary"}
         aria-label="updoot post"
@@ -84,8 +84,8 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
           color: "gray",
         }}
         size="sm"
-        color="gray"
-        bgColor={post.voteStatus === -1 ? "dark1" : "secondary"}
+        color={post.voteStatus === -1 ? "white" : "gray"}
+        bgColor={post.voteStatus === -1 ? "red" : "secondary"}
         borderWidth="2px"
         borderColor={post.voteStatus === -1 ? "red" : "secondary"}
         aria-label="downdoot post"

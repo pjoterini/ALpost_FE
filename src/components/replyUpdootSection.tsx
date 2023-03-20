@@ -50,7 +50,7 @@ export const ReplyUpdootSection: React.FC<ReplyUpdootSectionProps> = ({
         }}
         size="sm"
         color="gray"
-        bgColor={reply.voteStatus === 1 ? "dark1" : "secondary"}
+        bgColor={reply.voteStatus === 1 ? "green" : "secondary"}
         borderWidth="2px"
         borderColor={reply.voteStatus === 1 ? "green" : "secondary"}
         aria-label="updoot reply"
@@ -84,7 +84,7 @@ export const ReplyUpdootSection: React.FC<ReplyUpdootSectionProps> = ({
         }}
         size="sm"
         color="gray"
-        bgColor={reply.voteStatus === -1 ? "dark1" : "secondary"}
+        bgColor={reply.voteStatus === -1 ? "red" : "secondary"}
         borderWidth="2px"
         borderColor={reply.voteStatus === -1 ? "red" : "secondary"}
         aria-label="downdoot reply"

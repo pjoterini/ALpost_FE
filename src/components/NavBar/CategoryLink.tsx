@@ -16,10 +16,10 @@ export const CategoryLink: React.FC<CategoryLinkProps> = ({
     <a href={url}>
       <Heading
         _hover={{
-          color: "green",
+          color: "accent",
         }}
         transition="500ms"
-        color={router.pathname.includes(category) ? "green" : "white2"}
+        color={router.pathname.includes(category) ? "accent" : "white2"}
         letterSpacing={{ base: "0em", sm: ".1em" }}
         fontWeight="normal"
         textTransform="uppercase"
