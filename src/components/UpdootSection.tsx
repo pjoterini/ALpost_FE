@@ -1,71 +1,71 @@
-import { ChevronUpIcon, ChevronDownIcon } from "@chakra-ui/icons";
-import { background, Box, Flex, IconButton, Text } from "@chakra-ui/react";
-import React from "react";
+import { ChevronUpIcon, ChevronDownIcon } from '@chakra-ui/icons'
+import { background, Box, Flex, IconButton, Text } from '@chakra-ui/react'
+import React from 'react'
 import {
   PostSnippetFragment,
   useMeQuery,
-  useVoteMutation,
-} from "../generated/graphql";
+  useVoteMutation
+} from '../generated/graphql'
 
 interface UpdootSectionProps {
   post: {
-    __typename?: "Post" | undefined;
-    id: number;
-    createdAt: string;
-    updatedAt: string;
-    title: string;
-    category: string;
-    points: number;
-    textSnippet?: string;
-    voteStatus?: number | null | undefined;
+    __typename?: 'Post' | undefined
+    id: number
+    createdAt: string
+    updatedAt: string
+    title: string
+    category: string
+    points: number
+    textSnippet?: string
+    voteStatus?: number | null | undefined
     creator: {
-      __typename?: "User";
-      id: number;
-      username: string;
-    };
-  };
+      __typename?: 'User'
+      id: number
+      username: string
+    }
+  }
 }
 
 export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
-  const [, vote] = useVoteMutation();
-  let voteStatusColor;
+  const [, vote] = useVoteMutation()
+  let voteStatusColor
 
   if (post.voteStatus === 1) {
-    voteStatusColor = "green";
+    voteStatusColor = 'green'
   }
   if (post.voteStatus === -1) {
-    voteStatusColor = "red";
+    voteStatusColor = 'red'
   }
   if (post.voteStatus == undefined) {
-    voteStatusColor = "gray";
+    voteStatusColor = 'gray'
   }
 
   return (
-    <Flex p={4} align="center" flexDirection="column">
+    <Flex p={4} align='center' flexDirection='column'>
       <IconButton
         _hover={{
-          borderColor: "white",
-          borderWidth: "2px",
-          bgColor: "secondary",
-          color: "gray",
+          borderColor: 'white',
+          borderWidth: '2px',
+          bgColor: 'secondary',
+          color: 'gray'
         }}
-        size="sm"
-        color={post.voteStatus === -1 ? "white" : "gray"}
-        bgColor={post.voteStatus === 1 ? "green" : "secondary"}
-        borderWidth="2px"
-        borderColor={post.voteStatus === 1 ? "green" : "secondary"}
-        aria-label="updoot post"
+        size='sm'
+        color={post.voteStatus === -1 ? 'white' : 'gray'}
+        bgColor={post.voteStatus === 1 ? 'green' : 'secondary'}
+        borderWidth='2px'
+        borderColor={post.voteStatus === 1 ? 'green' : 'secondary'}
+        aria-label='vote post'
         onClick={async () => {
           if (post.voteStatus === 1) {
             await vote({
               postId: post.id,
-              value: 1,
-            });
+              value: 1
+            })
           } else {
             await vote({
               postId: post.id,
-              value: 1,
-            });
+              value: 1
+            })
           }
         }}
       >
@@ -78,33 +78,33 @@ export const UpdootSection: React.FC<UpdootSectionProps> = ({ post }) => {
 
       <IconButton
         _hover={{
-          borderColor: "white",
-          borderWidth: "2px",
-          bgColor: "secondary",
-          color: "gray",
+          borderColor: 'white',
+          borderWidth: '2px',
+          bgColor: 'secondary',
+          color: 'gray'
         }}
-        size="sm"
-        color={post.voteStatus === -1 ? "white" : "gray"}
-        bgColor={post.voteStatus === -1 ? "red" : "secondary"}
-        borderWidth="2px"
-        borderColor={post.voteStatus === -1 ? "red" : "secondary"}
-        aria-label="downdoot post"
+        size='sm'
+        color={post.voteStatus === -1 ? 'white' : 'gray'}
+        bgColor={post.voteStatus === -1 ? 'red' : 'secondary'}
+        borderWidth='2px'
+        borderColor={post.voteStatus === -1 ? 'red' : 'secondary'}
+        aria-label='downdoot post'
         onClick={async () => {
           if (post.voteStatus === -1) {
             await vote({
               postId: post.id,
-              value: -1,
-            });
+              value: -1
+            })
           } else {
             await vote({
               postId: post.id,
-              value: -1,
-            });
+              value: -1
+            })
           }
         }}
       >
         <ChevronDownIcon h={6} w={6} />
       </IconButton>
     </Flex>
-  );
-};
+  )
+}

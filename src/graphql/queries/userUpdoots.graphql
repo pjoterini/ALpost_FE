@@ -1,6 +1,6 @@
 query UserUpdoots($userId: Int!) {
   userUpdoots(userId: $userId) {
-    updoots {
+    votes {
       userId
     }
   }
